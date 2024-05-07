@@ -1,0 +1,55 @@
+import robocode.*;
+
+public class Sana extends AdvancedRobot {
+
+    // Variáveis para controlar a fumaça
+    private int tempoFumaca = 5; // Tempo que a fumaça dura (em ticks)
+    private int intervaloFumaca = 10; // Intervalo entre cada disparo de fumaça (em ticks)
+    private int tempoRestanteFumaca = 0; // Tempo restante da fumaça atual
+
+    public void run() {
+        // Definir cor rosa
+        setBodyColor(Color.pink);
+
+        // Loop principal do robô
+        while (true) {
+            // Verificar se há um inimigo próximo
+            ScanResult scanResult = getScannedRobot();
+            if (scanResult != null) {
+                // Se um inimigo for encontrado, atirar fumaça
+                atiraFumaca();
+            }
+
+            // Mover-se aleatoriamente
+            setRandomHeading();
+            setRandomSpeed(100, 50);
+
+            // Executar ações a cada tick
+            execute();
+        }
+    }
+
+    private void atiraFumaca() {
+        // Verificar se a fumaça ainda está ativa
+        if (tempoRestanteFumaca > 0) {
+            tempoRestanteFumaca--;
+            return;
+        }
+
+        // Atirar fumaça e iniciar o temporizador
+        fire(3);
+        tempoRestanteFumaca = tempoFumaca;
+    }
+
+    private void setRandomHeading() {
+        // Definir um ângulo aleatório para virar
+        double angle = Math.random() * 360;
+        setTurnAngle(angle);
+    }
+
+    private void setRandomSpeed(int maxSpeed, int minSpeed) {
+        // Definir uma velocidade aleatória dentro do intervalo especificado
+        double speed = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+        setVelocity(speed);
+    }
+}

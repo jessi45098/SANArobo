@@ -1,0 +1,55 @@
+import robocode.*;
+
+public class SanaRobot extends Robot {
+    
+    public void run() {
+        setColors(java.awt.Color.pink, java.awt.Color.white, java.awt.Color.white); // Define as cores do robô
+        while(true) {
+            ahead(100); // Move para frente
+            turnGunRight(360); // Gira o canhão 360 graus
+            back(100); // Move para trás
+            turnGunRight(360); // Gira o canhão 360 graus
+        }
+    }
+    
+    public void onScannedRobot(ScannedRobotEvent e) {
+        fire(3); // Atira com potência 3 quando um robô é detectado
+    }
+    
+    public void onHitByBullet(HitByBulletEvent e) {
+        turnLeft(90 - e.getBearing()); // Vira para o lado oposto ao da bala
+        ahead(100); // Move para frente
+    }
+    
+    public void onHitWall(HitWallEvent e) {
+        turnLeft(90); // Vira 90 graus para evitar a parede
+    }
+    
+    public void onDeath(DeathEvent e) {
+        System.out.println("Oh não! Sana foi derrotada."); // Mensagem exibida quando Sana é derrotada
+    }
+    
+    public void onWin(WinEvent e) {
+        System.out.println("Sana venceu!"); // Mensagem exibida quando Sana vence
+    }
+    
+    public void onRobotDeath(RobotDeathEvent e) {
+        turnRight(90); // Vira 90 graus ao detectar a derrota de um robô adversário
+    }
+    
+    public void onHitRobot(HitRobotEvent e) {
+        if (e.getBearing() > -90 && e.getBearing() <= 90) {
+            back(100); // Move para trás se o adversário estiver à frente
+        } else {
+            ahead(100); // Move para frente se o adversário estiver atrás
+        }
+        turnGunRight(360); // Gira o canhão 360 graus para tentar eliminar o adversário
+    }
+    
+    public void onBulletHit(BulletHitEvent e) {
+        setBulletColor(java.awt.Color.white); // Define a cor da bala como branca
+        Bullet bullet = e.getBullet();
+        Bullet smoke = setBulletColor(java.awt.Color.white); // Define a cor da fumaça como branca
+        fireBullet(smoke); // Solta uma bala de fumaça branca ao atingir um adversário
+    }
+}
